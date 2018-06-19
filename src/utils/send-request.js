@@ -57,6 +57,10 @@ function onRes (buffer, cb) {
       const outputStream = ndjson.parse()
       pump(res, outputStream)
       res.on('end', () => {
+        console.log('send-request end: res', res);
+        if (!res.trailers) {
+          res.trailers = { "x-stream-error": "NOTE: LOOK INTO WHY THIS IS NULL FOR PUBSUB PUBLISH REQUEST" }
+        }
         let err = res.trailers['x-stream-error']
         if (err) {
           // Not all errors are JSON

@@ -3,7 +3,7 @@
 const promisify = require('promisify-es6')
 const EventEmitter = require('events')
 const eos = require('end-of-stream')
-const isNode = require('detect-node')
+// const isNode = require('detect-node')
 const setImmediate = require('async/setImmediate')
 const PubsubMessageStream = require('./utils/pubsub-message-stream')
 const stringlistToArray = require('./utils/stringlist-to-array')
@@ -35,13 +35,13 @@ module.exports = (arg) => {
       }
 
       // Throw an error if ran in the browsers
-      if (!isNode) {
-        if (!callback) {
-          return Promise.reject(NotSupportedError())
-        }
-
-        return setImmediate(() => callback(NotSupportedError()))
-      }
+      // if (!isNode) {
+      //   if (!callback) {
+      //     return Promise.reject(NotSupportedError())
+      //   }
+      //
+      //   return setImmediate(() => callback(NotSupportedError()))
+      // }
 
       // promisify doesn't work as we always pass a
       // function as last argument (`handler`)
@@ -59,13 +59,13 @@ module.exports = (arg) => {
       subscribe(topic, handler, options, callback)
     },
     unsubscribe: (topic, handler, callback) => {
-      if (!isNode) {
-        if (!callback) {
-          return Promise.reject(NotSupportedError())
-        }
-
-        return setImmediate(() => callback(NotSupportedError()))
-      }
+      // if (!isNode) {
+      //   if (!callback) {
+      //     return Promise.reject(NotSupportedError())
+      //   }
+      //
+      //   return setImmediate(() => callback(NotSupportedError()))
+      // }
 
       if (ps.listenerCount(topic) === 0 || !subscriptions[topic]) {
         const err = new Error(`Not subscribed to '${topic}'`)
@@ -113,9 +113,9 @@ module.exports = (arg) => {
       setImmediate(() => callback())
     },
     publish: promisify((topic, data, callback) => {
-      if (!isNode) {
-        return callback(NotSupportedError())
-      }
+      // if (!isNode) {
+      //   return callback(NotSupportedError())
+      // }
 
       if (!Buffer.isBuffer(data)) {
         return callback(new Error('data must be a Buffer'))
@@ -129,9 +129,9 @@ module.exports = (arg) => {
       send(request, callback)
     }),
     ls: promisify((callback) => {
-      if (!isNode) {
-        return callback(NotSupportedError())
-      }
+      // if (!isNode) {
+      //   return callback(NotSupportedError())
+      // }
 
       const request = {
         path: 'pubsub/ls'
@@ -140,9 +140,9 @@ module.exports = (arg) => {
       send.andTransform(request, stringlistToArray, callback)
     }),
     peers: promisify((topic, callback) => {
-      if (!isNode) {
-        return callback(NotSupportedError())
-      }
+      // if (!isNode) {
+      //   return callback(NotSupportedError())
+      // }
 
       const request = {
         path: 'pubsub/peers',
