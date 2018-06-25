@@ -9,7 +9,7 @@ const PubsubMessageStream = require('./utils/pubsub-message-stream')
 const stringlistToArray = require('./utils/stringlist-to-array')
 const moduleConfig = require('./utils/module-config')
 
-const NotSupportedError = () => new Error('pubsub is currently not supported when run in the browser')
+// const NotSupportedError = () => new Error('pubsub is currently not supported when run in the browser')
 
 /* Public API */
 module.exports = (arg) => {
