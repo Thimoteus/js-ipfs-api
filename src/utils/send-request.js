@@ -56,21 +56,6 @@ function onRes (buffer, cb) {
     if (chunkedObjects && isJson) {
       const outputStream = ndjson.parse()
       pump(res, outputStream)
-      res.on('end', () => {
-        if (!res.trailers) {
-          res.trailers = { 'x-stream-error': 'NOTE: LOOK INTO WHY THIS IS NULL FOR PUBSUB PUBLISH REQUEST' }
-        }
-        let err = res.trailers['x-stream-error']
-        if (err) {
-          // Not all errors are JSON
-          try {
-            err = JSON.parse(err)
-          } catch (e) {
-            err = { Message: err }
-          }
-          outputStream.emit('error', new Error(err.Message))
-        }
-      })
       return cb(null, outputStream)
     }
 
