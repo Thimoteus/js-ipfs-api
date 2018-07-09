@@ -116,6 +116,11 @@ function requestAPI (config, options, callback) {
 
     headers['Content-Type'] = `multipart/form-data; boundary=${options.multipartBoundary}`
   }
+  
+  /* Make RN Android environment pubsub work */
+  if (!headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json'
+  }
 
   const qs = Qs.stringify(options.qs, {
     arrayFormat: 'repeat',
