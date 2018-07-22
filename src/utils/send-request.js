@@ -32,6 +32,10 @@ function parseError (res, cb) {
 
 function onRes (buffer, cb) {
   return (res) => {
+    if (res.statusCode >= 400 || !res.statusCode) {
+      return parseError(res, cb)
+    }
+
     const stream = Boolean(res.headers['x-stream-output'])
     const chunkedObjects = Boolean(res.headers['x-chunked-output'])
     const isJson = res.headers['content-type'] &&
@@ -41,10 +45,6 @@ function onRes (buffer, cb) {
       log(res.req.method, `${res.req.getHeaders().host}${res.req.path}`, res.statusCode, res.statusMessage)
     } else {
       log(res.url, res.statusCode, res.statusMessage)
-    }
-
-    if (res.statusCode >= 400 || !res.statusCode) {
-      return parseError(res, cb)
     }
 
     // Return the response stream directly
@@ -116,7 +116,7 @@ function requestAPI (config, options, callback) {
 
     headers['Content-Type'] = `multipart/form-data; boundary=${options.multipartBoundary}`
   }
-  
+
   /* Make RN Android environment pubsub work */
   if (!headers['Content-Type']) {
     headers['Content-Type'] = 'application/json'
