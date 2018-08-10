@@ -186,17 +186,15 @@ module.exports = (arg) => {
       subscriptions[topic].res = stream
 
       stream.on('data', (msg) => {
-        ps.emit(topic, msg)
+        ps.emit(topic, { type: "data", value: msg })
       })
 
       stream.on('error', (err) => {
-        ps.emit('error', err)
+        ps.emit(topic, { type: "error", value: err })
       })
 
       eos(stream, (err) => {
-        if (err) {
-          ps.emit('error', err)
-        }
+        ps.emit(topic, { type: "end", error: err || null })
 
         subscriptions[topic] = null
         ps.removeListener(topic, handler)
