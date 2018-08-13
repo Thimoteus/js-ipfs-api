@@ -91,8 +91,14 @@ module.exports = (arg) => {
                 resolve()
               })
             })
-            subscriptions[topic].req.abort()
+
+            var sub = subscriptions[topic];
             subscriptions[topic] = null
+            try {
+              sub.req.abort();
+            } catch (e) {
+              reject(e);
+            }
           })
         }
 
@@ -101,8 +107,15 @@ module.exports = (arg) => {
           // FIXME: Artificial timeout needed to ensure unsubscribed
           setTimeout(() => callback(err))
         })
-        subscriptions[topic].req.abort()
+
+        var sub = subscriptions[topic];
         subscriptions[topic] = null
+        try {
+            sub.req.abort();
+        } catch (e) {
+            /* ignore? */
+        }
+
         return
       }
 
